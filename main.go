@@ -62,7 +62,9 @@ func main() {
 	flag.Parse()
 
 	ctx := context.Background()
-	host, err := libp2p.New()
+	host, err := libp2p.New(libp2p.ListenAddrStrings(
+		fmt.Sprint("/ip4/0.0.0.0/tcp/8080"),
+	))
 	if err != nil {
 		panic(err)
 	}
@@ -76,9 +78,9 @@ func main() {
 	s := mdns.NewMdnsService(host, discoveryNamespace, &discoveryNotifee{h: host})
 	s.Start()
 
-	fmt.Println("Addresses:", host.Addrs()[3])
+	fmt.Println("Addresses:", host.Addrs())
 	fmt.Println("ID:", host.ID())
-	fmt.Printf("P2P Address String: %v/p2p/%v", host.Addrs()[3], host.ID())
+	fmt.Printf("P2P Address String: %v/p2p/%v", host.Addrs()[1], host.ID())
 
 	if *peerAddr != "" {
 		fmt.Println(peerAddr)
